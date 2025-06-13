@@ -1,0 +1,85 @@
+<div class="hero-container flex items-center justify-center min-h-screen relative px-6 pt-10">
+    <div class="container mx-auto">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Content -->
+            <div class="text-center lg:text-left animate-fade-in-left">
+                <h1 class="text-5xl lg:text-7xl font-bold mb-6">
+                    <span class="gradient-text text-xl md:text-4xl">Hi, I am</span><br>
+                    <span class="text-white text-3xl md:text-5xl"><span class="text-blue-300">Manideep </span> Chopperla</span>
+                </h1>
+                <p class="text-xl lg:text-1xl text-gray-300 mb-8 leading-relaxed">
+                    I turn ideas into fullstack web apps — clean code, powerful APIs, and seamless user experiences, all backed by modern technologies.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#projects">
+                        <button class="btn-primary px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105">
+                            <i class="fas fa-rocket mr-2"></i>
+                            View My Work
+                        </button>
+                    </a>  
+                    <a href="https://drive.google.com/uc?export=download&id=1ebR8pT6Ix5nXQp2YhLguBi0Lotar9Fvf" download target="_blank">  
+                    <button class="border-2 border-purple-400 text-purple-400 px-8 py-4 text-lg font-semibold rounded-lg hover:bg-purple-400 hover:text-white transition-all duration-300">
+                        <i class="fas fa-download mr-2"></i>
+                        Download CV
+                    </button>
+                    </a>
+                </div>
+                
+                <!-- Social Links -->
+                <div class="flex justify-center lg:justify-start space-x-6 mt-8">
+                    <a href="https://github.com/Manideepchopperla" class="text-gray-400 hover:text-purple-400 transition-colors transform hover:scale-110">
+                        <i class="fab fa-github text-2xl"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/manideepchopperla/" class="text-gray-400 hover:text-purple-400 transition-colors transform hover:scale-110">
+                        <i class="fab fa-linkedin text-2xl"></i>
+                    </a>
+                    <a href="https://leetcode.com/u/manideep_ch/" class="text-gray-400 hover:text-purple-400 transition-colors transform hover:scale-110">
+                        <i class="fas fa-code text-2xl"></i>
+                    </a>
+                    <!-- <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors transform hover:scale-110">
+                        <i class="fab fa-twitter text-2xl"></i>
+                    </a> -->
+                </div>
+            </div>
+            
+            <!-- Right Content - 3D Model -->
+            <div class="animate-fade-in-right">
+                <div class="spline-container">
+                    <!-- Spline 3D Model -->
+                    <iframe src='https://my.spline.design/robotfollowcursorforlandingpage-vsECCWN0BNLpFz2ZjtokL5eJ/' frameborder='0' width='100%' height='100%' allowfullscreen></iframe>
+                    
+                    <!-- Fallback content if Spline doesn't load -->
+                    <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-xl" id="spline-fallback" style="display: none;">
+                        <div class="text-center">
+                            <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                                <i class="fas fa-cube text-3xl text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2">3D Model</h3>
+                            <p class="text-gray-400">Interactive 3D scene loading...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Floating Elements -->
+                <div class="absolute top-10 right-10 w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-20 animate-pulse"></div>
+                <div class="absolute bottom-10 left-10 w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-400 rounded-full opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div class="flex flex-col items-center text-gray-400">
+            <span class="text-sm mb-2">Scroll to explore</span>
+            <i class="fas fa-chevron-down text-xl"></i>
+        </div>
+    </div>
+    
+    <!-- Background Elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-purple-400 rounded-full opacity-60 animate-ping"></div>
+        <div class="absolute top-3/4 right-1/4 w-1 h-1 bg-pink-400 rounded-full opacity-80 animate-ping" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-cyan-400 rounded-full opacity-70 animate-ping" style="animation-delay: 4s;"></div>
+    </div>
+</div>
+
