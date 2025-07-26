@@ -5,35 +5,246 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Portfolio - Creative Developer</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/styles.css">
-    
-    <!-- Spline Runtime -->
-    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.47/build/spline-viewer.js"></script>
-    
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* Custom CSS Styles */
+        :root {
+            --primary-color: #8b5cf6;
+            --secondary-color: #ec4899;
+            --accent-color: #06b6d4;
+            --dark-bg: #111827;
+            --darker-bg: #0f172a;
+            --card-bg: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            min-height: 100vh;
             font-family: 'Inter', sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(139, 92, 246, 0.1);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero-container {
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        }
+
+        .spline-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .spline-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { 
+                background-position: 0% 50%; 
+            }
+            50% { 
+                background-position: 100% 50%; 
+            }
+        }
+
+        /* Card Styles */
+        .glass-card {
+            background: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        /* Project Cards */
+        .project-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(236, 72, 153, 0.9));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+            z-index: 2;
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+
+        /* Skills Grid */
+        .skill-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Contact Form */
+        .contact-form {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
         }
     </style>
 </head>
 <body class="bg-gray-900 text-white overflow-x-hidden">
-    <!-- Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-800">
         <div class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
-                <div class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Portfolio
-                </div>
+                <div id="nav-title" class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    </div>
                 <div class="hidden md:flex space-x-8">
                     <a href="#hero" class="nav-link hover:text-purple-400 transition-colors">Home</a>
                     <a href="#about" class="nav-link hover:text-purple-400 transition-colors">About</a>
@@ -46,7 +257,6 @@
                     </button>
                 </div>
             </div>
-            <!-- Mobile Menu -->
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4">
                 <div class="flex flex-col space-y-4">
                     <a href="#hero" class="nav-link hover:text-purple-400 transition-colors">Home</a>
@@ -58,54 +268,397 @@
         </div>
     </nav>
 
-    <!-- Loading Screen -->
     <div id="loading-screen" class="fixed inset-0 bg-gray-900 z-50 flex items-center justify-center">
         <div class="text-center">
-            <div class="loading-spinner"></div>
+            <div class="loading-spinner mx-auto"></div>
             <p class="mt-4 text-lg">Loading Portfolio...</p>
         </div>
     </div>
 
-    <!-- Main Content -->
     <main>
-        <!-- Hero Section -->
-        <section id="hero" class="mt-10 min-h-screen"></section>
-
-        <!-- About Section -->
-        <section id="about" class="min-h-screen">
-            <!-- Content will be loaded dynamically -->
-        </section>
-
-        <!-- Projects Section -->
-        <section id="projects" class="min-h-screen">
-            <!-- Content will be loaded dynamically -->
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="min-h-screen">
-            <!-- Content will be loaded dynamically -->
-        </section>
+        <section id="hero" class="min-h-screen"></section>
+        <section id="about" class="py-20 px-6 bg-gradient-to-b from-gray-900 to-gray-800"></section>
+        <section id="projects" class="py-20 px-6 bg-gradient-to-b from-gray-800 to-gray-900"></section>
+        <section id="contact" class="py-20 px-6 bg-gradient-to-b from-gray-900 to-gray-800"></section>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 py-8">
         <div class="container mx-auto px-6 text-center">
-            <p class="text-gray-400">&copy; 2025 Portfolio. All rights reserved.</p>
-            <div class="flex justify-center space-x-6 mt-4">
-                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
-                    <i class="fab fa-github text-xl"></i>
-                </a>
-                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
-                    <i class="fab fa-linkedin text-xl"></i>
-                </a>
-                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
-                    <i class="fas fa-code text-xl"></i>
-                </a>
-            </div>
+            <p id="footer-text" class="text-gray-400"></p>
+            <div id="footer-socials" class="flex justify-center space-x-6 mt-4">
+                </div>
         </div>
     </footer>
 
-    <!-- Custom JavaScript -->
-    <script src="js/script.js"></script>
+    <script>
+        // ===================================================================================
+        // PORTFOLIO DATA
+        // ===================================================================================
+        // All your portfolio content goes here.
+        // To add a new skill or project, just add a new entry to the corresponding array.
+        // ===================================================================================
+        const portfolioData = {
+            // Personal Information
+            personalInfo: {
+                name: "Manideep Chopperla",
+                title: "Full Stack Developer",
+                navTitle: "Portfolio",
+                email: "manideepchopperla1808@gmail.com",
+                phone: "+91 8919155889",
+                location: "Tuni, Andhra Pradesh, India",
+                availability: "Available Worldwide",
+                resumeUrl: "https://drive.google.com/uc?export=download&id=1ebR8pT6Ix5nXQp2YhLguBi0Lotar9Fvf",
+                socials: [
+                    { name: "GitHub", icon: "fab fa-github", url: "https://github.com/Manideepchopperla" },
+                    { name: "LinkedIn", icon: "fab fa-linkedin", url: "https://www.linkedin.com/in/manideepchopperla/" },
+                    { name: "LeetCode", icon: "fas fa-code", url: "https://leetcode.com/u/manideep_ch/" }
+                ]
+            },
+
+            // Hero Section Content
+            hero: {
+                greeting: "Hi, I am",
+                mainHeading: "Manideep Chopperla",
+                subHeading: "I turn ideas into fullstack web apps — clean code, powerful APIs, and seamless user experiences, all backed by modern technologies.",
+                splineUrl: "https://my.spline.design/robotfollowcursorforlandingpage-vsECCWN0BNLpFz2ZjtokL5eJ/"
+            },
+
+            // About Section Content
+            about: {
+                heading: "About Me",
+                description1: "Passionate about creating immersive digital experiences that bridge the gap between creativity and technology.",
+                description2: "With a strong foundation in both frontend and backend technologies, I bring ideas to life by building responsive, scalable, and high-performing web and mobile responsive applications.",
+                description3: "I specialize in JavaScript, React, Node.js, MongoDB, and Redux — blending clean code with efficient architecture."
+            },
+
+            // Skills Section Content
+            skills: {
+                heading: "Technical Skills",
+                list: [
+                    { name: "HTML5", icon: "fab fa-html5", color: "text-orange-500", gradient: "from-orange-400 to-red-400", level: 95 },
+                    { name: "CSS3", icon: "fab fa-css3-alt", color: "text-blue-500", gradient: "from-blue-400 to-cyan-400", level: 90 },
+                    { name: "JavaScript", icon: "fab fa-js-square", color: "text-yellow-500", gradient: "from-yellow-400 to-orange-400", level: 92 },
+                    { name: "React", icon: "fab fa-react", color: "text-cyan-400", gradient: "from-cyan-400 to-blue-400", level: 88 },
+                    { name: "Node.js", icon: "fab fa-node-js", color: "text-green-500", gradient: "from-green-400 to-emerald-400", level: 85 },
+                    { name: "Redux", icon: "fas fa-cube", color: "text-purple-500", gradient: "from-purple-400 to-pink-400", level: 85 },
+                    { name: "Python", icon: "fab fa-python", color: "text-blue-400", gradient: "from-blue-400 to-indigo-400", level: 75 },
+                    { name: "C++", icon: "fas fa-file-code", color: "text-pink-500", gradient: "from-pink-400 to-rose-400", level: 75 },
+                    { name: "ExpressJs", icon: "fas fa-server", color: "text-green-500", gradient: "from-green-400 to-emerald-400", level: 85 },
+                    { name: "MongoDB", icon: "fas fa-database", color: "text-yellow-500", gradient: "from-yellow-400 to-orange-400", level: 80 },
+                    { name: "DSA", icon: "fas fa-project-diagram", color: "text-purple-500", gradient: "from-purple-400 to-pink-400", level: 65 },
+                    { name: "RESTful APIs", icon: "fas fa-cogs", color: "text-orange-500", gradient: "from-orange-400 to-red-400", level: 90 },
+                    { name: "Postman", icon: "fas fa-rocket", color: "text-blue-400", gradient: "from-blue-400 to-indigo-400", level: 90 },
+                    { name: "Firebase", icon: "fas fa-fire", color: "text-blue-500", gradient: "from-blue-400 to-cyan-400", level: 85 },
+                    { name: "SQL", icon: "fas fa-database", color: "text-yellow-500", gradient: "from-yellow-400 to-orange-400", level: 80 },
+                    { name: "Git/Github", icon: "fab fa-git-alt", color: "text-cyan-400", gradient: "from-cyan-400 to-blue-400", level: 88 },
+                    { name: "Socket.io", icon: "fas fa-bolt", color: "text-gray-400", gradient: "from-gray-400 to-slate-400", level: 60 }
+                ]
+            },
+
+            // Projects Section Content
+            projects: {
+                heading: "Featured Projects",
+                description: "Explore my latest work showcasing innovative web development Projects.",
+                list: [
+                    {
+                        title: "Collaborative To-Do Board",
+                        shortDescription: "A real-time MERN-based Kanban board with Socket.IO-powered sync and JWT-secured authentication.",
+                        tech: ["React", "Node.js", "Socket.IO", "MongoDB", "JWT"],
+                        liveUrl: "https://to-do-board-beta.vercel.app/",
+                        githubUrl: "https://github.com/Manideepchopperla/Collaborative-Kanban-Board",
+                        icon: "fas fa-tasks",
+                        gradient: "from-teal-600 to-cyan-600"
+                    },
+                    {
+                        title: "Hostel Attendance System",
+                        shortDescription: "A full-stack hostel attendance monitoring system using QRCode.",
+                        tech: ["React", "Node.js", "QRCode", "MongoDB", "NodeMailer"],
+                        liveUrl: "https://hostel-attendence-system.onrender.com/",
+                        githubUrl: "https://github.com/Manideepchopperla/Hostel-Attendence-System",
+                        icon: "fas fa-globe",
+                        gradient: "from-purple-600 to-pink-600"
+                    },
+                    {
+                        title: "Farm Fresh",
+                        shortDescription: "A full-stack web application to streamline bulk vegetable and fruit orders.",
+                        tech: ["ReactJS", "NodeJS", "MongoDB", "Redux", "ExpressJS"],
+                        liveUrl: "https://farmfresh-9p24.onrender.com/",
+                        githubUrl: "https://github.com/Manideepchopperla/FarmFresh",
+                        icon: "fas fa-cube",
+                        gradient: "from-cyan-600 to-blue-600"
+                    },
+                    {
+                        title: "Project Cost Tracker",
+                        shortDescription: "A minimal yet powerful React-based web app that helps users manage and track project expenses efficiently.",
+                        tech: ["React", "Firebase", "Redux"],
+                        liveUrl: "https://project-cost-tracker-beryl.vercel.app/",
+                        githubUrl: "https://github.com/Manideepchopperla/Project-Cost-Tracker",
+                        icon: "fas fa-mobile-alt",
+                        gradient: "from-green-600 to-emerald-600"
+                    },
+                    {
+                        title: "NetflixGPT",
+                        shortDescription: "An AI-driven movie recommendation platform using ReactJS and Gemini API.",
+                        tech: ["ReactJS", "Firebase", "Redux", "Gemini API", "TMDB API"],
+                        liveUrl: "https://netflix-gpt-neon-rho.vercel.app/",
+                        githubUrl: "https://github.com/Manideepchopperla/Netflix_GPT",
+                        icon: "fas fa-chart-line",
+                        gradient: "from-orange-600 to-red-600"
+                    },
+                    {
+                        title: "NxtWatch Video Platform",
+                        shortDescription: "A dynamic video streaming platform that fetches video content using RESTful APIs.",
+                        tech: ["ReactJs", "RestFul API", "Context API"],
+                        liveUrl: "https://nxtwatchs200456.ccbp.tech/",
+                        githubUrl: "https://github.com/Manideepchopperla/NxtWatch",
+                        icon: "fas fa-vr-cardboard",
+                        gradient: "from-indigo-600 to-purple-600"
+                    }
+                ]
+            },
+            
+            // Contact Section Content
+            contact: {
+                heading: "Get In Touch",
+                description: "Ready to start your next project? Let's collaborate and create something amazing together.",
+                splineUrl: "https://my.spline.design/holographicearthwithdynamiclines-TGQ2ykKSk61RmxG3BlGploUO/"
+            }
+        };
+
+        // ===================================================================================
+        // DYNAMIC CONTENT INJECTION SCRIPT
+        // ===================================================================================
+        // This script builds the HTML from the data object above.
+        // No need to edit anything below this line.
+        // ===================================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('loading-screen');
+            
+            // --- Helper function to create elements ---
+            const createElement = (tag, classList = [], textContent = '') => {
+                const el = document.createElement(tag);
+                el.classList.add(...classList);
+                el.textContent = textContent;
+                return el;
+            };
+
+            // --- Navigation ---
+            const navTitle = document.getElementById('nav-title');
+            if (navTitle) navTitle.textContent = portfolioData.personalInfo.navTitle;
+
+            // --- Hero Section ---
+            const heroSection = document.getElementById('hero');
+            if (heroSection) {
+                heroSection.innerHTML = `
+                <div class="hero-container flex items-center justify-center min-h-screen relative px-6 pt-10">
+                    <div class="container mx-auto">
+                        <div class="grid lg:grid-cols-2 gap-12 items-center">
+                            <div class="text-center lg:text-left">
+                                <h1 class="text-5xl lg:text-7xl font-bold mb-6">
+                                    <span class="gradient-text text-xl md:text-4xl">${portfolioData.hero.greeting}</span><br>
+                                    <span class="text-white text-3xl md:text-5xl">${portfolioData.hero.mainHeading}</span>
+                                </h1>
+                                <p class="text-xl lg:text-1xl text-gray-300 mb-8 leading-relaxed">${portfolioData.hero.subHeading}</p>
+                                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                                    <a href="#projects" class="btn-primary px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105">
+                                        <i class="fas fa-rocket mr-2"></i> View My Work
+                                    </a>
+                                    <a href="${portfolioData.personalInfo.resumeUrl}" download target="_blank" class="border-2 border-purple-400 text-purple-400 px-8 py-4 text-lg font-semibold rounded-lg hover:bg-purple-400 hover:text-white transition-all duration-300">
+                                        <i class="fas fa-download mr-2"></i> Download CV
+                                    </a>
+                                </div>
+                                <div class="flex justify-center lg:justify-start space-x-6 mt-8">
+                                    ${portfolioData.personalInfo.socials.map(social => `
+                                        <a href="${social.url}" target="_blank" class="text-gray-400 hover:text-purple-400 transition-colors transform hover:scale-110">
+                                            <i class="${social.icon} text-2xl"></i>
+                                        </a>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="spline-container">
+                                <iframe src='${portfolioData.hero.splineUrl}' frameborder='0'></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            // --- About Section ---
+            const aboutSection = document.getElementById('about');
+            if (aboutSection) {
+                aboutSection.innerHTML = `
+                <div class="container mx-auto">
+                    <div class="text-center mb-16">
+                        <h2 class="text-5xl font-bold mb-6"><span class="gradient-text">${portfolioData.about.heading}</span></h2>
+                        <p class="text-xl text-gray-300 max-w-3xl mx-auto">${portfolioData.about.description1}</p>
+                    </div>
+                    <div class="flex justify-center mb-20 md:mx-40">
+                        <div class="glass-card p-8">
+                            <div class="flex items-center mb-6">
+                                <div class="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center mr-6">
+                                    <i class="fas fa-user text-2xl text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white">${portfolioData.personalInfo.name}</h3>
+                                    <p class="text-purple-400 font-semibold">${portfolioData.personalInfo.title}</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-lg leading-relaxed mb-6">${portfolioData.about.description2}</p>
+                            <p class="text-gray-300 text-lg leading-relaxed mb-8">${portfolioData.about.description3}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex items-center"><i class="fas fa-envelope text-purple-400 mr-3"></i><p class="text-gray-300">${portfolioData.personalInfo.email}</p></div>
+                                <div class="flex items-center"><i class="fas fa-phone text-purple-400 mr-3"></i><span class="text-gray-300">${portfolioData.personalInfo.phone}</span></div>
+                                <div class="flex items-center"><i class="fas fa-map-marker-alt text-purple-400 mr-3"></i><span class="text-gray-300">${portfolioData.personalInfo.location}</span></div>
+                                <div class="flex items-center"><i class="fas fa-globe text-purple-400 mr-3"></i><span class="text-gray-300">${portfolioData.personalInfo.availability}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-20">
+                        <h3 class="text-3xl font-bold text-center mb-12"><span class="gradient-text">${portfolioData.skills.heading}</span></h3>
+                        <div id="skills-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            </div>
+                    </div>
+                </div>`;
+            }
+
+            // --- Skills Grid ---
+            const skillsGrid = document.getElementById('skills-grid');
+            if (skillsGrid) {
+                portfolioData.skills.list.forEach(skill => {
+                    const skillItem = `
+                    <div class="skill-item">
+                        <i class="${skill.icon} text-4xl ${skill.color} mb-4"></i>
+                        <h4 class="text-lg font-semibold text-white mb-2">${skill.name}</h4>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="bg-gradient-to-r ${skill.gradient} h-2 rounded-full" style="width: ${skill.level}%"></div>
+                        </div>
+                    </div>`;
+                    skillsGrid.innerHTML += skillItem;
+                });
+            }
+
+            // --- Projects Section ---
+            const projectsSection = document.getElementById('projects');
+            if (projectsSection) {
+                projectsSection.innerHTML = `
+                <div class="container mx-auto">
+                    <div class="text-center mb-16">
+                        <h2 class="text-5xl font-bold mb-6"><span class="gradient-text">${portfolioData.projects.heading}</span></h2>
+                        <p class="text-xl text-gray-300 max-w-3xl mx-auto">${portfolioData.projects.description}</p>
+                    </div>
+                    <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                        </div>
+                </div>`;
+            }
+
+            // --- Projects Grid ---
+            const projectsGrid = document.getElementById('projects-grid');
+            if (projectsGrid) {
+                portfolioData.projects.list.forEach(project => {
+                    const projectCard = `
+                    <div class="project-card glass-card rounded-xl overflow-hidden">
+                        <div class="relative h-64 bg-gradient-to-br ${project.gradient} flex items-center justify-center">
+                            <div class="text-center text-white p-4">
+                                <i class="${project.icon} text-4xl mb-4"></i>
+                                <h4 class="text-xl font-bold">${project.title}</h4>
+                                <p class="text-sm opacity-75">${project.tech.slice(0, 4).join(' • ')}</p>
+                            </div>
+                            <div class="project-overlay">
+                                <div class="text-white">
+                                    <h3 class="text-2xl font-bold mb-4">${project.title}</h3>
+                                    <p class="mb-6">${project.shortDescription}</p>
+                                    <div class="flex gap-4 justify-center">
+                                        <a href="${project.liveUrl}" target="_blank" class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                                            <i class="fas fa-eye mr-2"></i>View
+                                        </a>
+                                        <a href="${project.githubUrl}" target="_blank" class="border-2 border-white text-white px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-all">
+                                            <i class="fab fa-github mr-2"></i>Code
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">${project.title}</h3>
+                            <p class="text-gray-400 mb-4">${project.shortDescription}</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${project.tech.map(tech => `<span class="px-3 py-1 bg-purple-600/20 text-purple-400 text-sm rounded-full">${tech}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>`;
+                    projectsGrid.innerHTML += projectCard;
+                });
+            }
+
+            // --- Contact Section ---
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                contactSection.innerHTML = `
+                <div class="container mx-auto">
+                    <div class="text-center mb-16">
+                        <h2 class="text-5xl font-bold mb-6"><span class="gradient-text">${portfolioData.contact.heading}</span></h2>
+                        <p class="text-xl text-gray-300 max-w-3xl mx-auto">${portfolioData.contact.description}</p>
+                    </div>
+                    <div class="grid lg:grid-cols-2 gap-12 items-start">
+                        <div class="contact-form">
+                            <h3 class="text-2xl font-bold text-white mb-6">Send Message</h3>
+                            <form id="contact-form" class="space-y-6">
+                                <div class="form-group"><input type="text" name="Name" required class="form-input" placeholder="Enter your name"></div>
+                                <div class="form-group"><input type="email" name="email" required class="form-input" placeholder="Enter your email address"></div>
+                                <div class="form-group"><textarea name="message" rows="6" required class="form-input resize-none" placeholder="Tell me about your project..."></textarea></div>
+                                <button type="submit" class="btn-primary w-full py-4 text-lg font-semibold rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-paper-plane mr-2"></i> Send Message
+                                </button>
+                            </form>
+                        </div>
+                        <div class="spline-container">
+                             <iframe src='${portfolioData.contact.splineUrl}' frameborder='0'></iframe>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            // --- Footer ---
+            const footerText = document.getElementById('footer-text');
+            if (footerText) footerText.innerHTML = `&copy; ${new Date().getFullYear()} ${portfolioData.personalInfo.name}. All rights reserved.`;
+
+            const footerSocials = document.getElementById('footer-socials');
+            if (footerSocials) {
+                footerSocials.innerHTML = portfolioData.personalInfo.socials.map(social => `
+                    <a href="${social.url}" target="_blank" class="text-gray-400 hover:text-purple-400 transition-colors">
+                        <i class="${social.icon} text-xl"></i>
+                    </a>
+                `).join('');
+            }
+
+            // --- Mobile Menu Toggle ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                });
+                mobileMenu.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('nav-link')) {
+                        mobileMenu.classList.add('hidden');
+                        const icon = mobileMenuBtn.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+
+            // --- Hide loader after content is loaded ---
+            setTimeout(() => {
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 500);
+                }
+            }, 1000); // Simulate loading time
+        });
+    </script>
 </body>
 </html>
