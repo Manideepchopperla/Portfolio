@@ -294,16 +294,13 @@
         // ===================================================================================
         // PORTFOLIO DATA
         // ===================================================================================
-        // All your portfolio content goes here.
-        // To add a new skill or project, just add a new entry to the corresponding array.
-        // ===================================================================================
         const portfolioData = {
             // Personal Information
             personalInfo: {
                 name: "Manideep Chopperla",
                 title: "Full Stack Developer",
                 navTitle: "Portfolio",
-                email: "manideepchopperla1808@gmail.com",
+                email: "chopperlamanideep1029@gmail.com",
                 phone: "+91 8919155889",
                 location: "Tuni, Andhra Pradesh, India",
                 availability: "Available Worldwide",
@@ -425,23 +422,9 @@
             }
         };
 
-        // ===================================================================================
-        // DYNAMIC CONTENT INJECTION SCRIPT
-        // ===================================================================================
-        // This script builds the HTML from the data object above.
-        // No need to edit anything below this line.
-        // ===================================================================================
         document.addEventListener('DOMContentLoaded', () => {
             const loader = document.getElementById('loading-screen');
             
-            // --- Helper function to create elements ---
-            const createElement = (tag, classList = [], textContent = '') => {
-                const el = document.createElement(tag);
-                el.classList.add(...classList);
-                el.textContent = textContent;
-                return el;
-            };
-
             // --- Navigation ---
             const navTitle = document.getElementById('nav-title');
             if (navTitle) navTitle.textContent = portfolioData.personalInfo.navTitle;
@@ -603,12 +586,15 @@
                         <div class="contact-form">
                             <h3 class="text-2xl font-bold text-white mb-6">Send Message</h3>
                             <form id="contact-form" class="space-y-6">
+                                <input type="hidden" name="access_key" value="27e5e93f-5b5f-49dc-a460-d61eb50bc20f">
+                                <input type="hidden" name="subject" value="New Contact Form Submission from Portfolio">
                                 <div class="form-group"><input type="text" name="Name" required class="form-input" placeholder="Enter your name"></div>
                                 <div class="form-group"><input type="email" name="email" required class="form-input" placeholder="Enter your email address"></div>
                                 <div class="form-group"><textarea name="message" rows="6" required class="form-input resize-none" placeholder="Tell me about your project..."></textarea></div>
-                                <button type="submit" class="btn-primary w-full py-4 text-lg font-semibold rounded-lg flex items-center justify-center">
+                                <button type="submit" id="contact-submit-btn" class="btn-primary w-full py-4 text-lg font-semibold rounded-lg flex items-center justify-center">
                                     <i class="fas fa-paper-plane mr-2"></i> Send Message
                                 </button>
+                                <p id="contact-result" class="text-center mt-4 h-6"></p>
                             </form>
                         </div>
                         <div class="spline-container">
@@ -620,7 +606,7 @@
 
             // --- Footer ---
             const footerText = document.getElementById('footer-text');
-            if (footerText) footerText.innerHTML = `&copy; ${new Date().getFullYear()} ${portfolioData.personalInfo.name}. All rights reserved.`;
+            if (footerText) footerText.innerHTML = `&copy; 2025 ${portfolioData.personalInfo.name}. All rights reserved.`;
 
             const footerSocials = document.getElementById('footer-socials');
             if (footerSocials) {
@@ -648,6 +634,60 @@
                         icon.classList.remove('fa-times');
                         icon.classList.add('fa-bars');
                     }
+                });
+            }
+            
+            // --- Contact Form Submission Logic ---
+            const contactForm = document.getElementById('contact-form');
+            const submitBtn = document.getElementById('contact-submit-btn');
+            const resultMsg = document.getElementById('contact-result');
+
+            if (contactForm) {
+                contactForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(contactForm);
+                    const object = {};
+                    formData.forEach((value, key) => { object[key] = value; });
+                    
+                    const json = JSON.stringify(object);
+                    resultMsg.innerHTML = "Sending...";
+                    resultMsg.className = 'text-gray-400 text-center mt-4 h-6';
+                    submitBtn.disabled = true;
+
+                    fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: json
+                    })
+                    .then(async (response) => {
+                        let jsonResponse = await response.json();
+                        if (response.status == 200) {
+                            resultMsg.innerHTML = jsonResponse.message || "Message sent successfully!";
+                            resultMsg.className = 'text-green-500 text-center mt-4 h-6';
+                        } else {
+                            resultMsg.innerHTML = jsonResponse.message || "Something went wrong!";
+                            resultMsg.className = 'text-red-500 text-center mt-4 h-6';
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        resultMsg.innerHTML = "Something went wrong!";
+                        resultMsg.className = 'text-red-500 text-center mt-4 h-6';
+                    })
+                    .then(() => {
+                        contactForm.reset();
+                        // Get the access key and subject back in the form
+                        contactForm.querySelector('input[name="access_key"]').value = "27e5e93f-5b5f-49dc-a460-d61eb50bc20f";
+                        contactForm.querySelector('input[name="subject"]').value = "New Contact Form Submission from Portfolio";
+                        
+                        setTimeout(() => {
+                            resultMsg.innerHTML = '';
+                            submitBtn.disabled = false;
+                        }, 5000);
+                    });
                 });
             }
 
